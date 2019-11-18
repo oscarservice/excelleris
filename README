@@ -1,0 +1,148 @@
+The Lifelabs Excelleris access, set up the integration directly on the oscar server.
+Run the program with different arguments (username/password/output directory). It will download any pending data and deposit the file into output directory which could match a server to send to.
+
+Get the source codes:
+git clone https://oscar_service@bitbucket.org/oscaremr/excelleris.git
+user name: oscar_service
+password: Sou******9
+
+The Excelleris downloader is available at https://bitbucket.org/oscaremr/excelleris/src/master/
+
+
+You must Download and build the code using maven
+
+$ mvn install
+
+Note: See bottom of this page to Download the JAR.
+
+This will create a JAR file in target/. You can then run the program using the following command
+
+$ java -jar excelleris-1.0-jar-with-dependencies.jar
+Missing required options: l, k, u, p
+usage: Excelleris Downloader
+-a,--SSL protocol <arg> default is TLSv1
+-c,--cert <arg> JKS location. default is
+/opt/excelleris/excelleris.jks
+-h,--help What you are seeing now
+-k,--keypass <arg> Key password (for the key in the keystore)
+-l,--storepass <arg> JKS keystore password
+-o,--outputDir <arg> Output directory for HL7 data. Default is
+/opt/excelleris/output
+-p,--password <arg> Password for Excelleris service
+-s,--BASE URL <arg> server url for Excelleris - default is
+https://api.ontest.excelleris.com
+-u,--username <arg> Username for Excelleris service
+-v,--verbose <arg> Show verbose output true/false. Default is
+false
+-x,--host <arg> required for cookies. default is
+api.ontest.excelleris.com. in BC, use
+api.bctest.excelleris.com
+-z,--pending <arg> Get Pending results true/false. Default is
+false
+
+
+Command to automatically download labs:
+
+sudo java -jar excelleris-1.0-jar-with-dependencies.jar -l PathCert -k PathCert -u EMRuserBE -p Trinity051519 -v true -s https://api.bctest.excelleris.com -x api.bctest.excelleris.com -c /opt/excelleris/excelleris.jks
+
+How to use Certificate
+---------------------------
+
+You need a client certificate to talk to the Excelleris service.
+                                                                                                                                                                                           1,1           Top
+Upon registering, you will receive a certificate in PFX format. (eg Oscar ON QA.pfx). This contains a certificate, private key, and root certificate
+
+The first step is to export the root certificate.
+        openssl pkcs12 -in "Trinity Healthcare Technologies.pfx" -nokeys
+Type in certficate password: PathCert
+This will print out 2 certificates..put the first one into it's own file called root.p12.
+It looks like this:
+
+-----BEGIN CERTIFICATE-----
+MIIDlTCCAn2gAwIBAgIQYw73ZnDhnblKw9lkIohWcjANBgkqhkiG9w0BAQUFADBR
+MQswCQYDVQQGEwJDQTELMAkGA1UECBMCQkMxIDAeBgNVBAoTF0V4Y2VsbGVyaXMg
+VGVjaG5vbG9naWVzMRMwEQYDVQQDEwpFeGNlbGxlcmlzMB4XDTEwMTExNTE3NTMy
+NloXDTI1MTExNTE4MDMyNVowUTELMAkGA1UEBhMCQ0ExCzAJBgNVBAgTAkJDMSAw
+HgYDVQQKExdFeGNlbGxlcmlzIFRlY2hub2xvZ2llczETMBEGA1UEAxMKRXhjZWxs
+ZXJpczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAIZIvC5HFL0CjZE6
+AanrsVMU9oxUuEURcKErVU2+4EkSyANfPY2xS0igl9ph0ge8lMs/BeIImVyCscE+
+kF8H6E1bqQLEJHSPTafkg4J+dxOxr+ZgCOPF+EV8xYpTiqle27zi++p43wSxviQ4
+Jjd7/QZOuhJ30Ekqj9QwKXyclMA7q6syUinOmvUvtP6FVUp+OtN2lt0uJVuI9eJT
+8joApNKzHYz0iqRZXMcjcEXQBlJr0iahBa7v3zqkAcpCjHQqgqIqSBTQh39cx1J/
+MKnD2U7F1NQfENGBZde874Av5h6QaSrrQQqC8P6pN0dLI1HLfBOBMSgdwQhMWKls
+1wt3cW8CAwEAAaNpMGcwEwYJKwYBBAGCNxQCBAYeBABDAEEwDgYDVR0PAQH/BAQD
+AgGGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFEoAf/h/Uzu0HBRabX22xYXj
+xMUoMBAGCSsGAQQBgjcVAQQDAgEAMA0GCSqGSIb3DQEBBQUAA4IBAQBKu8GXiOct
+T1xOc/p75Bp6nJegxiLI7QIqNxUSCSQeP8bzCnoYqMNYMISkXUWvLnngfLFu7XLC
+mkWLnZaS/fQ+JeF7/m6uHlVWGhLFwAFwBPLbXrvQxBbYaE6h4R2b5v2iVEBF3YYF
+epVAY7lgVk5OWbc1vgYzdbGJz8ArbObKe20I9yqLJOplpPDEy+ATrwc9RHbm5jeg
+obUWAOpEmtosZav4jcOpnwhYDHbtuXr/tRYEoy7At4CRXrZyAIAlWHHsGJB+Cz/5
+bGPbR7vpX5PrjIrvsJN6vZcajtKbkR4ArLInVb6qWENIPq/+5FLDKCeCHVQ2DK1F
+X2TTryUNOg7H
+-----END CERTIFICATE-----
+
+Next you want to add this certificate to your OSCAR's JRE. You do this by adding the certificate to $JRE_HOME/lib/security/cacerts
+This will allow JAVA to trust your signed certificate from Excelleris. So you won't get the error like this: javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+
+        ps aux|grep tomcat
+        ls -l /usr/lib/jvm/default-java/jre/lib/security/cacerts
+lrwxrwxrwx 1 root root 27 Mar 19 07:57 /usr/lib/jvm/default-java/jre/lib/security/cacerts -> /etc/ssl/certs/java/cacerts
+
+        sudo cp /etc/ssl/certs/java/cacerts .
+        cp cacerts cacerts.bk
+        sudo keytool -importcert -keystore cacerts -storepass changeit -file root.p12 -alias "excelleris-cert"
+        sudo cp cacerts /etc/ssl/certs/java
+
+
+(Tip: Use keystore explorer to open up the cacerts file and import your root.p12 certificate http://keystore-explorer.org/)
+Next, you need to create a new keystore and import the key pair (from .pfx file).
+        Download kse_5.4.1_all.deb from http://keystore-explorer.org/
+        Install it:
+                sudo dpkg -i kse_5.4.1_all.deb
+        Run it:
+                kse
+        Click "Create a new KeyStore". Select type "JKS"
+        Right click on window, Import Key Pair, Change Keystore Type, select PKCS#12
+        Enter password: PathCert
+        Browser .pfx file
+        Import
+        It automatically gave alias Trinity Healthcare Technologies (Excelleris)
+        Click on OK
+        Enter new password: PathCert
+        Confirm new password: PathCert
+        Successfully import
+        Click on File, Save, enter password PathCert, give it name excelleris.jks
+        After making folders :
+                sudo mkdir /opt/excelleris
+                sudo mkdir /opt/excelleris/output
+        sudo cp excelleris.jks /opt/excelleris/.
+
+After these steps are completed, you've
+    updated your OSCAR's JRE 's cacerts file to include the root certificate
+    created a new keystore with the public and private key to your client certificate.
+
+        Then you can run the following command to download labs from test server:
+sudo java -jar excelleris-1.0-jar-with-dependencies.jar -l PathCert -k PathCert -u EMRuserBE -p Trinity051519 -v true -z true -s https://api.bctest.excelleris.com -x api.bctest.excelleris.com -c /opt/excelleris/excelleris.jks -o /opt/excelleris/output
+
+	For production server, you need to change URL to api.bctest.excelleris.com to api.bc.excelleris.com, and replace all credentials.
+
+
+OSCAR Integration
+----------------------
+The downloader will output HL7 files to a specified directory (The default one is: /opt/excelleris/output). 
+The best approach is to use OSCAR's mule based hl7_file_management project which will scan the directory and upload any new files to OSCAR.
+(Tip: For more information on OSCAR's mule Getting started with electronic labs)
+You want to upload Ontario files as ExcellerisON lab type, in admin/lab uploading page, it shows up as Excelleris (Ontario)
+And for BC, use PATHL7 (EXCELLERIS is the lab type showing up in upload page)
+
+URL for Test: https://bctest.excelleris.com/launchpad/hl7pull.aspx
+URL for Production: https://api.bc.excelleris.com/hl7pull.aspx
+
+In order to open excelleris.com in browser, you need to import .pfx file into browser:
+        Preference -> Privacy & Security -> Security Certificates, click on View Certificates -> Import (browser .pfx file)
+        Ok (encrypt password: PathCert)
+        In browser bar, type about:config
+        Search security.tls.version.max , make integer 2 (from 4).
+Then open https://bctest.excelleris.com/
+Login in with the username and password provided by Excelleris.
+

@@ -178,7 +178,8 @@ public class Excelleris {
 			}
 			//make call for new data
 			CloseableHttpClient	httpclient3 = HttpClients.custom().setDefaultCookieStore(cookieStore).setSSLSocketFactory(sslsf).build();
-			HttpPost post4 = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+			//For testing: HttpPost post4 = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+			HttpPost post4 = new HttpPost(serverAddress + "/hl7pull.aspx");
 			List<NameValuePair> params2 = new ArrayList<NameValuePair>();
 			params2.add(new BasicNameValuePair("Page", "HL7"));
 			params2.add(new BasicNameValuePair("Query", "NewRequests"));
@@ -215,8 +216,8 @@ public class Excelleris {
 				setupCookiesFromLastResponse(cookieStore, response4);
 				
 				httpclient3 = HttpClients.custom().setDefaultCookieStore(cookieStore).setSSLSocketFactory(sslsf).build();
-				
-				post4 = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+				//For testing: post4 = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+				post4 = new HttpPost(serverAddress + "/hl7pull.aspx");
 				List<NameValuePair> params3 = new ArrayList<NameValuePair>();
 				params3.add(new BasicNameValuePair("Page", "HL7"));
 				params3.add(new BasicNameValuePair("Query", "NewRequests"));
@@ -273,8 +274,8 @@ public class Excelleris {
 	
 	private static boolean logout(String serverAddress, BasicCookieStore cookieStore, SSLConnectionSocketFactory sslsf, boolean verbose) throws Exception {
 		CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).setSSLSocketFactory(sslsf).build();
-
-		HttpPost post = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+		//For testing: HttpPost post = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+		HttpPost post = new HttpPost(serverAddress + "/hl7pull.aspx");
 	
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("Logout", "Yes"));
@@ -310,8 +311,8 @@ public class Excelleris {
 
 	private static boolean acknowlege(String serverAddress, BasicCookieStore cookieStore, SSLConnectionSocketFactory sslsf, boolean verbose) throws Exception {
 		CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).setSSLSocketFactory(sslsf).build();
-
-		HttpPost post = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+		//For testing: HttpPost post = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+		HttpPost post = new HttpPost(serverAddress + "/hl7pull.aspx");
 	
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("Page", "HL7"));
@@ -355,8 +356,9 @@ public class Excelleris {
 		        .build();
 		
 		CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).setDefaultCookieStore(cookieStore).setSSLSocketFactory(sslsf).build();
-
-		HttpPost post = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+		
+		//For testing: HttpPost post = new HttpPost(serverAddress + "/launchpad/hl7pull.aspx");
+		HttpPost post = new HttpPost(serverAddress + "/hl7pull.aspx");
 	
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("Page", "Login"));
@@ -385,7 +387,7 @@ public class Excelleris {
 			}
 			CloseableHttpResponse response2 = httpclient2.execute(post2);
 			if(response2.getStatusLine().getStatusCode() == 200) {
-				setupCookiesFromLastResponse(cookieStore, response2);
+				setupCookiesFromLastResponse(cookieStore, response2);				
 				return false;
 			}
 			
