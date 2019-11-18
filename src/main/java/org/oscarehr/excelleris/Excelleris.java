@@ -244,12 +244,12 @@ public class Excelleris {
 				
 				byte[] data = parseResponseToByteArray(response4);
 				
-			//	System.out.println(total);
+				System.out.println("hl7 file length:"+ data.length);
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHMMss");
 				String dt = formatter.format(new Date());
-				
-				writeToFile(data,outputDirectory +  File.separator + dt + ".hl7");
+				if(data.length > 53) //actually have lab hl7 data
+					writeToFile(data,outputDirectory +  File.separator + dt + ".hl7");
 				
 				acknowlege(serverAddress, cookieStore, sslsf,verbose);
 			}
